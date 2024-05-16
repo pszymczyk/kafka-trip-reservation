@@ -1,0 +1,20 @@
+###
+POST http://localhost:8090/trips
+Content-Type: application/json
+
+{
+  "description": "Trip to Mexico",
+  "shortDescription": "Mexico trip",
+  "destination": "Mexico",
+  "seatsNumber": 3,
+  "tripCode": "m4"
+}
+
+###
+POST http://localhost:8090/reservations
+Content-Type: application/json
+
+{
+  "tripCode": "m4",
+  "userId": "kazik"
+}
