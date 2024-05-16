@@ -6,7 +6,7 @@ import com.pszymczyk.kafkatripreservation.catalogue.OutboxEntity;
 import com.pszymczyk.kafkatripreservation.catalogue.OutboxEntityCreated;
 import com.pszymczyk.kafkatripreservation.catalogue.OutboxEntityCrudRepository;
 import com.pszymczyk.kafkatripreservation.step2.ReconcileJob;
-import com.pszymczyk.kafkatripreservation.tools.Utils;
+import com.pszymczyk.kafkatripreservation.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaOperations;

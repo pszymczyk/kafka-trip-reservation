@@ -1,4 +1,4 @@
-package com.pszymczyk.kafkatripreservation.tools;
+package com.pszymczyk.kafkatripreservation.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
