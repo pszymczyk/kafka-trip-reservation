@@ -23,22 +23,27 @@ public class ReconcileJob {
         this.catalogueModuleProperties = catalogueModuleProperties;
     }
 
-    @Scheduled(cron = "0 0 * * *")
+    @Scheduled(cron = "0 * * * * *")
     void reconcile() {
+        log.info("Starting reconcile job.");
         outboxEntityCrudRepository.findAllByTopicPartitionOffsetIsNull()
-                .forEach(outboxEntity -> kafkaOps.send(catalogueModuleProperties.getTripEventsTopic(), outboxEntity.getKafkaRecordKey(), outboxEntity.getKafkaRecordValue())
-                        .whenCompleteAsync((sendResult, throwable) -> {
-                            if (throwable != null) {
-                                log.warn("Error while sending event from outbox to kafka.", throwable);
-                            }
+                .forEach(outboxEntity -> {
+                    log.info("Reconcile trip {}.", outboxEntity.getKafkaRecordKey());
+                    kafkaOps.send(catalogueModuleProperties.getTripEventsTopic(), outboxEntity.getKafkaRecordKey(), outboxEntity.getKafkaRecordValue())
+                            .whenCompleteAsync((sendResult, throwable) -> {
+                                if (throwable != null) {
+                                    log.warn("Error while sending event from outbox to kafka.", throwable);
+                                }
 
-                            outboxEntity.setTopicPartitionOffset(String.format("%s,%s,%s",
-                                    sendResult.getRecordMetadata().topic(),
-                                    sendResult.getRecordMetadata().partition(),
-                                    sendResult.getRecordMetadata().offset()));
+                                outboxEntity.setTopicPartitionOffset(String.format("%s,%s,%s",
+                                        sendResult.getRecordMetadata().topic(),
+                                        sendResult.getRecordMetadata().partition(),
+                                        sendResult.getRecordMetadata().offset()));
 
-                            outboxEntityCrudRepository.save(outboxEntity);
-                        }));
+                                outboxEntityCrudRepository.save(outboxEntity);
+                            });
+                });
+        log.info("Reconciliation finished.");
     }
 }
 

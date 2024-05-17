@@ -14,7 +14,7 @@ public class Utils {
 
     public static void failSometimes() {
         Random rand = new Random();
-        int randomNum = rand.nextInt(0, 9);
+        int randomNum = rand.nextInt(0, 5);
         if (randomNum == 2) {
             throw new RuntimeException("Random number 2 = exception!");
         }

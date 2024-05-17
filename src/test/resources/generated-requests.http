@@ -7,7 +7,7 @@ Content-Type: application/json
   "shortDescription": "Mexico trip",
   "destination": "Mexico",
   "seatsNumber": 3,
-  "tripCode": "m4"
+  "tripCode": "991"
 }
 
 ###
