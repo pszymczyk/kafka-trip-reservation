@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class ReservationsService {
 
@@ -17,18 +19,24 @@ public class ReservationsService {
     }
 
     @Transactional
-    public ReservationSummary book(String userId, String tripCode) {
+    public Optional<ReservationSummary> book(String reservationRequestId, String userId, String tripCode) {
         Trip trip = tripRepository.findTrip(tripCode);
+
         if (trip == null) {
             throw new TripNotFound(tripCode);
         }
 
-        return trip.requestReservation(userId)
+        if (trip.alreadyProcessed(reservationRequestId)) {
+            log.warn("Skipping duplicate reservation request.");
+            return Optional.empty();
+        }
+
+        return Optional.of(trip.requestReservation(reservationRequestId, userId)
                 .map(summary -> {
                     tripRepository.save(trip);
                     return summary;
                 })
-                .orElseThrow(() -> new TripFullyBooked(tripCode));
+                .orElseThrow(() -> new TripFullyBooked(tripCode)));
     }
 
     @Transactional

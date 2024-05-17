@@ -3,6 +3,7 @@ package com.pszymczyk.kafkatripreservation.reservations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,7 +27,7 @@ public class SqlTripRepository implements TripRepository {
                                                    .map(entity -> new Reservation(entity.getId(), entity.getUserId(), Reservation.ReservationStatus.valueOf(entity.getStatus())))
                                                    .collect(toList());
 
-        return new Trip(tripEntity.getTripCode(), tripEntity.getSeatsNumber(), reservations);
+        return new Trip(tripEntity.getTripCode(), tripEntity.getSeatsNumber(), reservations, tripEntity.getReservationRequestsIds());
     }
 
     @Override
@@ -37,6 +38,7 @@ public class SqlTripRepository implements TripRepository {
             tripEntity = new TripEntity();
             tripEntity.setTripCode(trip.getTripCode());
             tripEntity.setSeatsNumber(trip.getSeatsNumber());
+            tripEntity.setReservationRequestsIds(trip.getReservationRequestsIds());
         } else {
             tripEntity.update(trip);
         }

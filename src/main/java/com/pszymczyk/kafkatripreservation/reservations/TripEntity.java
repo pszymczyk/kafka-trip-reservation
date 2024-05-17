@@ -23,6 +23,9 @@ public class TripEntity {
     @JoinColumn(name="TRIP_ID")
     private Set<ReservationEntity> reservations;
 
+    @ElementCollection
+    private Set<String> reservationRequestsIds;
+
     public long getEntityId() {
         return entityId;
     }
@@ -56,6 +59,12 @@ public class TripEntity {
     }
 
     public void update(Trip trip) {
+        updateReservations(trip);
+        updateReservationsRequestId(trip);
+
+    }
+
+    private void updateReservations(Trip trip) {
         Map<UUID, Reservation> grouped = trip.getReservations()
                                              .stream()
                                              .collect(toMap(Reservation::getId, x -> x));
@@ -73,5 +82,17 @@ public class TripEntity {
             reservationEntity.setStatus(reservation.getStatus().name());
             reservations.add(reservationEntity);
         }
+    }
+
+    private void updateReservationsRequestId(Trip trip) {
+        reservationRequestsIds.addAll(trip.getReservationRequestsIds());
+    }
+
+    public Set<String> getReservationRequestsIds() {
+        return reservationRequestsIds;
+    }
+
+    public void setReservationRequestsIds(Set<String> reservationRequestsIds) {
+        this.reservationRequestsIds = reservationRequestsIds;
     }
 }

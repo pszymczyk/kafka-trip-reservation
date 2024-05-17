@@ -1,8 +1,8 @@
 package com.pszymczyk.kafkatripreservation.step5;
 
 import com.pszymczyk.kafkatripreservation.reservations.ReservationRequest;
-import com.pszymczyk.kafkatripreservation.reservations.ReservationSummary;
 import com.pszymczyk.kafkatripreservation.reservations.ReservationsService;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,10 +23,11 @@ public class ReservationRequestKafkaListener {
             groupId = "reservations-module-reservations-requests-listener",
             topics = "${reservations.reservations-requests-topic}",
             containerFactory = "reservationRequestEventListenerContainerFactory")
-    public void handleReservationRequest(ReservationRequest reservationRequest) {
-        ReservationSummary reservationSummary = reservationsService.book(reservationRequest.userId(),  reservationRequest.tripCode());
-        log.info("Reservation summary {}.", reservationSummary);
+    public void handleReservationRequest(ConsumerRecord<String, ReservationRequest> reservationRequest) {
+        reservationsService.book(
+                        String.format("%s,%s,%s", reservationRequest.topic(), reservationRequest.partition(), reservationRequest.offset()),
+                        reservationRequest.value().userId(),
+                        reservationRequest.value().tripCode())
+                .ifPresent(reservationSummary -> log.info("Reservation summary {}.", reservationSummary));
     }
-
-
 }

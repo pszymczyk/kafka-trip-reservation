@@ -1,33 +1,34 @@
 package com.pszymczyk.kafkatripreservation.reservations;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Trip {
 
     private final String tripCode;
     private final int seatsNumber;
 
-    private List<Reservation> reservations;
+    private final Set<String> reservationRequestsIds;
+    private final List<Reservation> reservations;
 
     Trip(String tripCode, int seatsNumber) {
-        this(tripCode, seatsNumber, new ArrayList<>());
+        this(tripCode, seatsNumber, new ArrayList<>(), new HashSet<>());
     }
 
-    Trip(String tripCode, int seatsNumber, List<Reservation> reservations) {
+    Trip(String tripCode, int seatsNumber, List<Reservation> reservations, Set<String> reservationRequestsIds) {
         this.tripCode = tripCode;
         this.seatsNumber = seatsNumber;
         this.reservations = reservations;
+        this.reservationRequestsIds = reservationRequestsIds;
     }
 
-    Optional<ReservationSummary> requestReservation(String userId) {
+    Optional<ReservationSummary> requestReservation(String reservationRequestId, String userId) {
         if (!hasFreeSeats()) {
             return Optional.empty();
         }
 
         Reservation newReservation = new Reservation(userId);
-        addReservation(newReservation);
+        reservations.add(newReservation);
+        reservationRequestsIds.add(reservationRequestId);
         return Optional.of(new ReservationSummary(newReservation.getId().toString(), newReservation.getStatus().name()));
     }
 
@@ -40,12 +41,6 @@ public class Trip {
         return seatsNumber > reservations.size();
     }
 
-    private void addReservation(Reservation newReservation) {
-        List<Reservation> newReservations = new ArrayList<>(reservations);
-        newReservations.add(newReservation);
-        reservations = newReservations;
-    }
-
     List<Reservation> getReservations() {
         return reservations;
     }
@@ -56,5 +51,13 @@ public class Trip {
 
     public int getSeatsNumber() {
         return seatsNumber;
+    }
+
+    public boolean alreadyProcessed(String reservationRequestId) {
+        return reservationRequestsIds.contains(reservationRequestId);
+    }
+
+    public Set<String> getReservationRequestsIds() {
+        return reservationRequestsIds;
     }
 }
