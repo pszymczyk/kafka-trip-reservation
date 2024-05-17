@@ -7,7 +7,7 @@ Content-Type: application/json
   "shortDescription": "Mexico trip",
   "destination": "Mexico",
   "seatsNumber": 3,
-  "tripCode": "991"
+  "tripCode": "101"
 }
 
 ###
@@ -15,6 +15,6 @@ POST http://localhost:8090/reservations
 Content-Type: application/json
 
 {
-  "tripCode": "m4",
+  "tripCode": "101",
   "userId": "kazik"
 }

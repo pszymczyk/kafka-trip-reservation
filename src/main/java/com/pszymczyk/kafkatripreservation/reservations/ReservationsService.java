@@ -23,6 +23,7 @@ public class ReservationsService {
         Trip trip = tripRepository.findTrip(tripCode);
 
         if (trip == null) {
+            log.warn("Trip with code {} not found. Retry mechanism will try to submit reservation again.", tripCode);
             throw new TripNotFound(tripCode);
         }
 

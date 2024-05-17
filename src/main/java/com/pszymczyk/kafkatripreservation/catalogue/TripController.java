@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,8 +38,9 @@ public class TripController {
     }
 
     @PostMapping(path = "/trips", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    void save(@RequestBody CreateTripRequest createTripRequest) throws JsonProcessingException {
+    CreateTripRequest save(@RequestBody CreateTripRequest createTripRequest) throws JsonProcessingException {
         TripEntity catalogueEntity = new TripEntity();
         catalogueEntity.setDescription(createTripRequest.description);
         catalogueEntity.setShortDescription(createTripRequest.shortDescription);
@@ -52,6 +55,7 @@ public class TripController {
         outboxEntity.setKafkaRecordValue(objectMapper.writeValueAsBytes(new TripRegisteredEvent("trip-registered", createTripRequest.tripCode, createTripRequest.seatsNumber)));
 
         publishApplicationEvent(outboxEntityCrudRepository.save(outboxEntity));
+        return createTripRequest;
     }
 
     private void publishApplicationEvent(OutboxEntity outboxEntity) {
