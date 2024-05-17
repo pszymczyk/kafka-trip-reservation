@@ -36,6 +36,8 @@ public class OutboxEntityPostPersistListener {
     @Async
     @TransactionalEventListener
     void handleOutboxEntityCreated(OutboxEntityCreated outboxEntityCreated) {
+        Utils.failSometimes();
+
         kafkaOps.send(catalogueModuleProperties.getTripEventsTopic(), outboxEntityCreated.outboxEntity().getKafkaRecordKey(), outboxEntityCreated.outboxEntity().getKafkaRecordValue())
                 .whenCompleteAsync((sendResult, throwable) -> {
                     if (throwable != null) {
@@ -47,8 +49,6 @@ public class OutboxEntityPostPersistListener {
                             sendResult.getRecordMetadata().topic(),
                             sendResult.getRecordMetadata().partition(),
                             sendResult.getRecordMetadata().offset()));
-
-                    Utils.failSometimes();
 
                     outboxEntityCrudRepository.save(outboxEntityInSession);
                 });
