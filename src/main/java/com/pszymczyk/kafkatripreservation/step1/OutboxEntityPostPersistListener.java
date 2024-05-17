@@ -33,24 +33,10 @@ public class OutboxEntityPostPersistListener {
      * Try to send event to kafka topic just after database transaction flushed.
      * When method failed for any reason #{@link ReconcileJob} will reconcile.
      */
-    @Async
-    @TransactionalEventListener
+
     void handleOutboxEntityCreated(OutboxEntityCreated outboxEntityCreated) {
         Utils.failSometimes();
 
-        kafkaOps.send(catalogueModuleProperties.getTripEventsTopic(), outboxEntityCreated.outboxEntity().getKafkaRecordKey(), outboxEntityCreated.outboxEntity().getKafkaRecordValue())
-                .whenCompleteAsync((sendResult, throwable) -> {
-                    if (throwable != null) {
-                        log.warn("Error sending event after outbox entity created.", throwable);
-                    }
-
-                    OutboxEntity outboxEntityInSession = outboxEntityCrudRepository.findById(outboxEntityCreated.outboxEntity().getEntityId()).orElseThrow();
-                    outboxEntityInSession.setTopicPartitionOffset(String.format("%s,%s,%s",
-                            sendResult.getRecordMetadata().topic(),
-                            sendResult.getRecordMetadata().partition(),
-                            sendResult.getRecordMetadata().offset()));
-
-                    outboxEntityCrudRepository.save(outboxEntityInSession);
-                });
+        //TODO
     }
 }

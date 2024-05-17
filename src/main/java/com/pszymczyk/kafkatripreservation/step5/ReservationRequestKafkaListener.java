@@ -19,15 +19,7 @@ public class ReservationRequestKafkaListener {
         this.reservationsService = reservationsService;
     }
 
-    @KafkaListener(
-            groupId = "reservations-module-reservations-requests-listener",
-            topics = "${reservations.reservations-requests-topic}",
-            containerFactory = "reservationRequestEventListenerContainerFactory")
     public void handleReservationRequest(ConsumerRecord<String, ReservationRequest> reservationRequest) {
-        reservationsService.book(
-                        String.format("%s,%s,%s", reservationRequest.topic(), reservationRequest.partition(), reservationRequest.offset()),
-                        reservationRequest.value().userId(),
-                        reservationRequest.value().tripCode())
-                .ifPresent(reservationSummary -> log.info("Reservation summary {}.", reservationSummary));
+        //TODO
     }
 }

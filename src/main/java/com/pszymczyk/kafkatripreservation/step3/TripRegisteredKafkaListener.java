@@ -14,10 +14,7 @@ public class TripRegisteredKafkaListener {
         this.reservationsService = reservationsService;
     }
 
-    @KafkaListener(topics = "${catalogue.trip-events-topic}",
-            groupId = "reservations-module-trip-registered-listener",
-            containerFactory = "tripRegisteredEventListenerContainerFactory")
     public void handleTripRegistered(TripRegisteredEvent tripRegisteredEvent) {
-        reservationsService.registerTrip(tripRegisteredEvent.tripCode(), tripRegisteredEvent.seatsNumber());
+        //TODO
     }
 }

@@ -15,16 +15,8 @@ public class TripRegisteredListenerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, TripRegisteredEvent> tripRegisteredEventListenerContainerFactory(
             KafkaProperties kafkaProperties) {
+        //TODO
 
-        DefaultKafkaConsumerFactory<String, TripRegisteredEvent> cf = new DefaultKafkaConsumerFactory<>(kafkaProperties.buildConsumerProperties(null));
-        cf.setKeyDeserializer(new StringDeserializer());
-        JsonDeserializer<TripRegisteredEvent> valueDeserializer = new JsonDeserializer<>(TripRegisteredEvent.class);
-        valueDeserializer.setUseTypeHeaders(false);
-        cf.setValueDeserializer(valueDeserializer);
-        ConcurrentKafkaListenerContainerFactory<String, TripRegisteredEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(cf);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
-
-        return factory;
+        return null;
     }
 }

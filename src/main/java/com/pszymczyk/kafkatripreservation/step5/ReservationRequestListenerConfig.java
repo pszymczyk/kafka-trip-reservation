@@ -17,14 +17,6 @@ public class ReservationRequestListenerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ReservationRequest> reservationRequestEventListenerContainerFactory(
             KafkaProperties kafkaProperties) {
 
-        DefaultKafkaConsumerFactory<String, ReservationRequest> cf = new DefaultKafkaConsumerFactory<>(kafkaProperties.buildConsumerProperties(null));
-        cf.setKeyDeserializer(new StringDeserializer());
-        JsonDeserializer<ReservationRequest> valueDeserializer = new JsonDeserializer<>(ReservationRequest.class);
-        valueDeserializer.setUseTypeHeaders(false);
-        cf.setValueDeserializer(valueDeserializer);
-        ConcurrentKafkaListenerContainerFactory<String, ReservationRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(cf);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
-        return factory;
+        //TODO
     }
 }

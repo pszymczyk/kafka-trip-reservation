@@ -14,15 +14,10 @@ import java.util.List;
 @Component
 public class KafkaExceptionHandlerConfiguration {
 
-    @Bean
+
     public RetryTopicConfiguration myOtherRetryTopic(KafkaTemplate<String, String> template,
                                                      ReservationsModuleProperties reservationsModuleProperties) {
-        return RetryTopicConfigurationBuilder
-                .newInstance()
-                .includeTopics(List.of(reservationsModuleProperties.getReservationsRequestsTopic()))
-                .exponentialBackoff(Duration.ofSeconds(30).toMillis(), 2, Duration.ofDays(1).toMillis())
-                .maxAttempts(10)
-                .retryOn(TripNotFound.class)
-                .create(template);
+        //TODO
+        return null;
     }
 }

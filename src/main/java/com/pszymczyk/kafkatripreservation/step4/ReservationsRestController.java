@@ -27,12 +27,8 @@ public class ReservationsRestController {
         this.kafkaOps = kafkaOps;
     }
 
-    @PostMapping(path = "/reservations", consumes = "application/json")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+
     public void bookTrip(@RequestBody Request request) throws ExecutionException, InterruptedException {
-        kafkaOps.send(reservationsModuleProperties.getReservationsRequestsTopic(),
-                        request.tripCode,
-                        new ReservationRequest("reservation-request", request.tripCode, request.userId))
-                .get();
+        //TODO
     }
 }
