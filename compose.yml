@@ -24,7 +24,7 @@ services:
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
 
   console:
-    image: docker.redpanda.com/redpandadata/console:2.7.1
+    image: docker.redpanda.com/redpandadata/console:v2.7.1
     restart: on-failure
     entrypoint: /bin/sh
     command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
