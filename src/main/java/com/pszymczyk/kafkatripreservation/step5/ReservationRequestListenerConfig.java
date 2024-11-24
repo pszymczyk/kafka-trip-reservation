@@ -13,10 +13,11 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 @Configuration
 public class ReservationRequestListenerConfig {
 
-    @Bean
+    //@Bean
     public ConcurrentKafkaListenerContainerFactory<String, ReservationRequest> reservationRequestEventListenerContainerFactory(
             KafkaProperties kafkaProperties) {
 
         //TODO
+        return null;
     }
 }
