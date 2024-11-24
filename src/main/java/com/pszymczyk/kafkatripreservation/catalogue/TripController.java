@@ -6,10 +6,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class TripController {
@@ -61,4 +66,11 @@ public class TripController {
     private void publishApplicationEvent(OutboxEntity outboxEntity) {
         applicationEventPublisher.publishEvent(new OutboxEntityCreated(outboxEntity));
     }
+
+    @GetMapping(path = "/trips", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<String, Object> getAllTrips() {
+        List<TripEntity> allTrips = StreamSupport.stream(tripEntityCrudRepository.findAll().spliterator(), false).toList();
+        return Map.of("trips", allTrips);
+    }
+
 }
