@@ -27,11 +27,6 @@ public class ReservationsService {
             throw new TripNotFound(tripCode);
         }
 
-        if (trip.alreadyProcessed(reservationRequestId)) {
-            log.warn("Skipping duplicate reservation request.");
-            return Optional.empty();
-        }
-
         return Optional.of(trip.requestReservation(reservationRequestId, userId)
                 .map(summary -> {
                     tripRepository.save(trip);
