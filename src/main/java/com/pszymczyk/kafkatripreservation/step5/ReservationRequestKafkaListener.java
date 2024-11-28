@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 @Component
 public class ReservationRequestKafkaListener {
 
@@ -25,7 +27,7 @@ public class ReservationRequestKafkaListener {
             containerFactory = "reservationRequestEventListenerContainerFactory")
     public void handleReservationRequest(ConsumerRecord<String, ReservationRequest> reservationRequest) {
         reservationsService.book(
-                        String.format("%s,%s,%s", reservationRequest.topic(), reservationRequest.partition(), reservationRequest.offset()),
+                        new String(reservationRequest.headers().lastHeader("Request-Id").value(), StandardCharsets.UTF_8),
                         reservationRequest.value().userId(),
                         reservationRequest.value().tripCode())
                 .ifPresent(reservationSummary -> log.info("Reservation summary {}.", reservationSummary));
